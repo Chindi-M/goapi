@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/chindi-m/goapi/api"
-	"github.com/chindi-m/goapi/internal/tools"
+	"github.com/Chindi-M/goapi/api"
+	"github.com/Chindi-M/goapi/internal/tools"
 	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/schema"
 )
@@ -19,6 +19,13 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
+
+	var database *tools.DatabaseInterface
+	database, err = tools.NewDatabase()
+	if err != nil {
 		api.InternalErrorHandler(w)
 		return
 	}

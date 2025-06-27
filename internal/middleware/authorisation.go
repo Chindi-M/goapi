@@ -4,15 +4,15 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/chindi-m/goapi/api"
-	"github.com/chindi-m/goapi/internal/tools"
+	"github.com/Chindi-M/goapi/api"
+	"github.com/Chindi-M/goapi/internal/tools"
 	log "github.com/sirupsen/logrus"
 )
 
 var UnAuthorisedError = errors.New("Invalid username or token. ")
 
 func Authorisation(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		var username string = r.URL.Query().Get("username")
 		var token = r.Header.Get("Authorisation")
@@ -31,10 +31,10 @@ func Authorisation(next http.Handler) http.Handler {
 			return 
 		}
 
-		var loginDetails *tools.loginDetails
-		loginDetails = (*&database).GetUserLoginDetails(username)
+		var loginDetails *tools.LoginDetails
+		loginDetails = (*database).GetUserLoginDetails(username)
 
-		if (loginDetails == nil || (token != (loginDetails).AuthToken)) {
+		if (loginDetails == nil || (token != loginDetails.AuthToken)) {
 			log.Error(UnAuthorisedError)
 			api.RequestErrorHandler(w, UnAuthorisedError)
 			return 
